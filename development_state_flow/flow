@@ -1,0 +1,23 @@
+0 - ask name and save 
+1 - ask for local or outstation 
+2 - ask for day or night 
+3 - ask for one-way or return:
+    1 - goto 5
+    2 - goto 4
+4 - ask for charges/booking :
+    1 - just show the rate card 
+    2 - goto 5
+5 - ask for pickup location
+6 - ask for drop location 
+7 - ask for date
+8 - ask for time
+9 - confirm the booking:
+    1 - goto 10 
+    2 - goto 11
+10 - thank you message and "cancle" option
+11 - select option:
+    1 - ask for day or night
+    2 - ask for service
+    3 - reset the state and stop the booking, send tha thank you message
+    4 - restart, reset the state and send the state 1 message
+
