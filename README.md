@@ -2,6 +2,13 @@
 
 WhatsApp Cab Booking Bot is a Node.js project designed for booking cabs from WhatsApp. It includes two sections: one for users who can book cabs via chat on WhatsApp, and another for owners who can use commands to confirm, cancel, or view all bookings.
 
+# OUTPUT 
+
+
+https://github.com/user-attachments/assets/03c161b2-9642-487a-bdb1-fc3fd60c3079
+
+
+
 ## User Section
 
 Users can effortlessly book cabs via chat on the WhatsApp bot by selecting available options, making the cab booking process more user-friendly.
