@@ -17,6 +17,8 @@ const { format } = require("mysql2/promise");
 const admin_state = require("./admin_state/admin_state");
 const fs = require("fs");
 const readline = require("readline");
+const path = require("path");
+const { exec } = require("child_process");
 // const { all } = require('bluebird');
 dotenv.config();
 
@@ -70,7 +72,9 @@ const insertOwnerDetails = async (db) => {
     if (owner_whatsapp_no.toLowerCase() === "done") break;
 
     if (!owner_whatsapp_no.trim()) {
-      console.log("⚠️ WhatsApp Number cannot be empty! Please enter a valid number.");
+      console.log(
+        "⚠️ WhatsApp Number cannot be empty! Please enter a valid number."
+      );
       continue;
     }
 
@@ -116,7 +120,9 @@ const insertRateCard = async (db) => {
 
     let booking_type = await getRequiredInput("Booking Type");
     let shift_type = await getRequiredInput("Shift Type");
-    let return_journey = await getRequiredInput("Return Journey (1 for Yes, 0 for No)");
+    let return_journey = await getRequiredInput(
+      "Return Journey (1 for Yes, 0 for No)"
+    );
     let start_time = await getRequiredInput("Start Time");
     let end_time = await getRequiredInput("End Time");
     let extra_hour_price = await getRequiredInput("Extra Hour Price");
@@ -132,7 +138,9 @@ const insertRateCard = async (db) => {
       notes,
     ]);
 
-    let addMore = await askQuestion("➕ Add another Rate Card? (yes/done to finish): ");
+    let addMore = await askQuestion(
+      "➕ Add another Rate Card? (yes/done to finish): "
+    );
     if (addMore.toLowerCase() === "done") break;
   }
 
@@ -144,7 +152,6 @@ const insertRateCard = async (db) => {
     console.log("✅ Rate card details inserted successfully!\n");
   }
 };
-
 
 // Main function
 const main = async () => {
@@ -212,9 +219,50 @@ client.on("authenticated", () => {
   console.log("AUTHENTICATED");
 });
 
+// Function to restart the script
+const restartScript = () => {
+  console.log("🔄 Restarting script...");
+  
+  // Execute 'npm run start' in a new process
+  exec("npm run start", (error, stdout, stderr) => {
+    if (error) {
+      console.error(`❌ Error restarting script: ${error.message}`);
+      return;
+    }
+    if (stderr) {
+      console.error(`⚠️ Script restart stderr: ${stderr}`);
+      return;
+    }
+    console.log(`✅ Script restarted: ${stdout}`);
+  });
+
+  // Exit current process
+  process.exit(1);
+};
+
+
 client.on("auth_failure", (msg) => {
   // Fired if session restore was unsuccessful
   console.error("AUTHENTICATION FAILURE", msg);
+
+  try {
+    const authPath = path.join(__dirname, ".wwebjs_auth");
+    const cachePath = path.join(__dirname, ".wwebjs_cache");
+    if (fs.existsSync(authPath))
+      fs.rmSync(authPath, { recursive: true, force: true });
+    if (fs.existsSync(cachePath))
+      fs.rmSync(cachePath, { recursive: true, force: true });
+
+    console.log("✅ Authentication files deleted. Restarting script...");
+
+    // Restart the script
+    restartScript();
+
+    // Restart client after deletion
+    startClient();
+  } catch (error) {
+    console.error("⚠️ Error deleting authentication files:", error);
+  }
 });
 
 client.on(
@@ -238,12 +286,9 @@ client.on(
       for (owner in data) {
         owners.push(data[owner].owner_whatsapp_no);
       }
- 
     });
 
     cron.schedule("*/1 * * * *", async () => {
-     
-
       let ride_data = await user_ride_db.fetch_not_confirmed_rides();
 
       for (const r_data of ride_data) {
@@ -418,7 +463,7 @@ const SendRideConfirmedMessageToOwner = async (client_whatsapp_no) => {
 const SendRideCancledMessageToOwner = async (client_whatsapp_no) => {
   await user_db.isUserExists(client_whatsapp_no).then(async (result) => {
     let user_data = result[0];
- 
+
     await owner_db.fetch_owners().then(async (data) => {
       let ride_data = await user_ride_db.get_user_ride_confirmed(
         client_whatsapp_no
@@ -476,7 +521,6 @@ const SendRideCancledMessageToOwner = async (client_whatsapp_no) => {
 };
 
 client.on("message", async (msg) => {
-
   // automation for personal chat
   if (msg.type === "chat") {
     const message = msg.body.toLowerCase();
@@ -484,15 +528,11 @@ client.on("message", async (msg) => {
 
     owner_number = owners.indexOf(user_whatsapp_no);
 
-
     if (owner_number != -1) {
-
-
       let current_owner_number = owners[owner_number];
       let number_format = `${r_funcs.extract_integer(
         current_owner_number
       )}@c.us`;
-
 
       let command = message.replace(/ /g, "").split(",");
 
@@ -520,7 +560,7 @@ client.on("message", async (msg) => {
           let ride_data = await user_ride_db.fetch_confimed_client_ride(
             `+${customer_number}`
           );
-     
+
           if (ride_data.length > 0) {
             if (ride_data[0].ride_status == 2) {
               await user_ride_db.set_ride_completed(`+${customer_number}`);
@@ -550,7 +590,6 @@ client.on("message", async (msg) => {
 
       // }
     } else if (chat_init_msg.includes(message)) {
-
       await user_db.isUserExists(user_whatsapp_no).then(async (result) => {
         if (result.length < 1) {
           await user_db.registerUser(user_whatsapp_no);
@@ -562,7 +601,7 @@ client.on("message", async (msg) => {
             let user_ride_data = await user_ride_db.get_user_ride_confirmed(
               user_whatsapp_no
             );
-       
+
             if (user_ride_data.length > 0) {
               client.sendMessage(msg.from, user_state.user_menu());
             } else {
@@ -977,7 +1016,6 @@ client.on("message", async (msg) => {
       });
     }
   }
-
 });
 
 client.initialize();
