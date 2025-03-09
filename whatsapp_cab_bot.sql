@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Jun 23, 2024 at 06:25 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Host: db_service
+-- Generation Time: Mar 09, 2025 at 06:47 AM
+-- Server version: 8.1.0
+-- PHP Version: 8.2.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `whatsappcabbooking`
+-- Database: `whatsapp_cab_bot`
 --
 
 -- --------------------------------------------------------
@@ -28,8 +28,8 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `owner_details` (
-  `o_id` int(11) NOT NULL,
-  `owner_whatsapp_no` varchar(20) NOT NULL
+  `o_id` int NOT NULL,
+  `owner_whatsapp_no` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -37,8 +37,7 @@ CREATE TABLE `owner_details` (
 --
 
 INSERT INTO `owner_details` (`o_id`, `owner_whatsapp_no`) VALUES
-(1, '910000000000'),
-(2, '910000000000');
+(1, '+910000000000');
 
 -- --------------------------------------------------------
 
@@ -47,14 +46,14 @@ INSERT INTO `owner_details` (`o_id`, `owner_whatsapp_no`) VALUES
 --
 
 CREATE TABLE `rate_card` (
-  `r_id` int(11) NOT NULL,
-  `booking_type` varchar(20) DEFAULT NULL,
-  `shift_type` varchar(20) DEFAULT NULL,
-  `return_journey` int(11) DEFAULT NULL,
-  `start_time` varchar(20) DEFAULT NULL,
-  `end_time` varchar(20) DEFAULT NULL,
+  `r_id` int NOT NULL,
+  `booking_type` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `shift_type` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `return_journey` int DEFAULT NULL,
+  `start_time` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `end_time` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `extra_hour_price` float DEFAULT NULL,
-  `notes` text NOT NULL
+  `notes` text COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -71,11 +70,18 @@ INSERT INTO `rate_card` (`r_id`, `booking_type`, `shift_type`, `return_journey`,
 --
 
 CREATE TABLE `users` (
-  `u_id` int(11) NOT NULL,
-  `user_fullname` varchar(50) DEFAULT NULL,
-  `user_whatsapp_no` varchar(20) NOT NULL,
-  `user_state` int(11) NOT NULL DEFAULT 0
+  `u_id` int NOT NULL,
+  `user_fullname` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `user_whatsapp_no` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
+  `user_state` int NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`u_id`, `user_fullname`, `user_whatsapp_no`, `user_state`) VALUES
+(35, 'aGlp', '+910000000000', 1);
 
 -- --------------------------------------------------------
 
@@ -84,17 +90,18 @@ CREATE TABLE `users` (
 --
 
 CREATE TABLE `user_ride` (
-  `registered_datetime` datetime NOT NULL DEFAULT current_timestamp(),
-  `r_id` int(11) NOT NULL,
-  `user_whatsapp_no` varchar(20) NOT NULL,
-  `local_or_outstation` int(11) DEFAULT NULL,
-  `day_or_night` int(11) DEFAULT NULL,
-  `oneway_or_return` int(11) DEFAULT NULL,
-  `pickup_location` varchar(200) DEFAULT NULL,
-  `drop_location` varchar(200) DEFAULT NULL,
+  `registered_datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `r_id` int NOT NULL,
+  `user_whatsapp_no` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
+  `local_or_outstation` int DEFAULT NULL,
+  `day_or_night` int DEFAULT NULL,
+  `oneway_or_return` int DEFAULT NULL,
+  `pickup_location` varchar(200) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `drop_location` varchar(200) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `ride_date` date DEFAULT NULL,
-  `ride_time` varchar(10) DEFAULT NULL,
-  `booking_confirmed` tinyint(1) NOT NULL DEFAULT 0
+  `ride_time` varchar(10) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `booking_confirmed` tinyint(1) NOT NULL DEFAULT '0',
+  `ride_status` int NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -133,25 +140,25 @@ ALTER TABLE `user_ride`
 -- AUTO_INCREMENT for table `owner_details`
 --
 ALTER TABLE `owner_details`
-  MODIFY `o_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `o_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `rate_card`
 --
 ALTER TABLE `rate_card`
-  MODIFY `r_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `r_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `u_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `u_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `user_ride`
 --
 ALTER TABLE `user_ride`
-  MODIFY `r_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `r_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
