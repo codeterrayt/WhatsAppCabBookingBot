@@ -131,12 +131,12 @@ This project utilizes the following technologies and dependencies:
 - `format` (from `mysql2/promise`): Function for SQL query formatting.
 - `admin_state`: Module for managing the state of the admin.
 
-
 ## Installation Guide
 
 ### Prerequisites
 
 - Node.js installed on your machine.
+- MYSQL installed on your machine.
 
 ### Clone the Repository
 
@@ -145,21 +145,61 @@ git clone https://github.com/codeterrayt/WhatsAppCabBookingBot.git
 cd WhatsAppCabBookingBot
 ```
 
+### Docker: MYSQL & PHPMYADMIN (OPTIONAL FOR DOCKER USERS ONLY)
+```bash
+docker-compose up -d
+```
+
+
 ### Install Dependencies
-```bash 
+```bash
 npm install
- ```
-### Run Project 
-```bash 
+```
+
+### Run Project
+```bash
 node index.js
 ```
-### Scan the QR Code: 
+
+### OR 
+```bash
+npm run start
+```
+
+### Setup Process (CLI)
+
+1. **Enter Owner Phone Number:**
+   - The CLI will prompt you to enter the owner's WhatsApp number.
+   - It must include the country code (e.g., `+91XXXXXXXXXX`).
+   - If you do not wish to add an owner, type `done` to skip.
+
+2. **Create Rate Cards:**
+   - The CLI will ask for rate card details such as:
+     - Booking Type
+     - Shift Type
+     - Return Journey (1 for Yes, 0 for No)
+     - Start Time
+     - End Time
+     - Extra Hour Price
+     - Notes
+   - You can add multiple rate cards.
+   - Type `done` to skip this step.
+
+### Scan the QR Code:
 Scan the displayed QR code with your WhatsApp mobile app.
 
 ---
 
-**WhatsApp Cab Booking Bot**
+## Troubleshooting
+If authentication fails, delete `.wwebjs_auth` and `.wwebjs_cache` directories, then restart the bot:
+```sh
+rm -rf .wwebjs_auth .wwebjs_cache && npm run start
+```
 
+---
+
+
+**WhatsApp Cab Booking Bot**
 
 Feel free to contribute to the project by submitting issues or pull requests.
 
