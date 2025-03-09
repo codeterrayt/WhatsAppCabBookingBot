@@ -2,3 +2,4 @@
 /.wwebjs_auth/  
 .env
 example.js
+.wwebjs_cache

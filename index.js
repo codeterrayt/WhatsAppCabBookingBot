@@ -324,16 +324,19 @@ const SendRideCancledMessageToOwner = async (client_whatsapp_no) => {
 client.on('message', async (msg) => {
   // console.log(msg);
 
-  console.log(owners);
-
   // automation for personal chat
   if (msg.type === 'chat') {
     const message = msg.body.toLowerCase();
     let user_whatsapp_no = '+' + r_funcs.extract_integer(msg.from);
 
-    owner_number = owners.indexOf(user_whatsapp_no)
+    owner_number = owners.indexOf(user_whatsapp_no);
+
+    console.log(msg.from, owners,user_whatsapp_no, owner_number)
+  
 
     if (owner_number != -1) {
+
+      console.log("im into owner section")
 
       let current_owner_number = owners[owner_number];
       let number_format = `${r_funcs.extract_integer(current_owner_number)}@c.us`;

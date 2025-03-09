@@ -1,0 +1,18 @@
+services:
+  db_service:
+    image: mysql:8.1.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ""
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: whatsapp_cab_bot
+    ports:
+      - "3306:3306"
+    
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80"
+    depends_on:
+      - db_service
+    environment:
+      PMA_HOST: db_service
